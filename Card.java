@@ -1,49 +1,67 @@
 
 public class Card {
 	private String suit;
-	private String number;
+	private String rank;
 	
 	public String getSuit() {
 		return suit;
 	}
 	
+	// setterで設定しようとしている値が妥当か検査
 	public void setSuit(String suit) {
 		if(suit.matches("[♥♦♠♣]{1}") || suit.equals("JOKER")){
 			this.suit = suit;
 		} else {
-			System.out.println("マークをセット出来ません。");
+			throw new IllegalArgumentException("不正なマークです: " + suit);
 		}
 		
 	}
 	
-	public String getNumber() {
-		return number;
+	public String getRank() {
+		return rank;
 	}
 	
-	public void setNumber(String number) {
-		if(number.matches("[AJQK023456789]{1}") || number.equals("10")){
-		this.number = number;
+	// setterで設定しようとしている値が妥当か検査
+	public void setNumber(String rank) {
+		if(rank.matches("[AJQK2-9]{1}") || rank.equals("10") || rank.equals("0")){
+		this.rank = rank;
 		} else {
-			System.out.println("数字をセット出来ません。");
+			throw new IllegalArgumentException("不正な数字です: " + rank);
 		}
 	}
 	
-	public boolean equals(Object o) {
+	// ババ抜きは数字で同じものとみるのでそのように設定
+	public boolean getCard(Object o) {
 		if(o instanceof Card card) {
-			if(this.number.equals(card.getNumber())) {
+			if(this.rank.equals(card.getRank())) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
+	// コンソールに表示する時の設定
 	public String toString() {
-		if(this.suit.equals("JOKER")) {
+		if("JOKER".equals(this.suit)) {
 			return this.getSuit();
 		} else {
-			return this.getSuit() + this.getNumber();
+			return this.getSuit() + this.getRank();
 		}
 		
 	}
 	
+	// ババ抜きは数字で同じものとみるのでそのように設定
+	public boolean equals(Object o) {
+		if(o instanceof Card card) {
+			if(this.rank.equals(card.getRank())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	// ババ抜きは数字で同じものとみるのでそのように設定
+	public int  hashCode() {
+		return Integer.parseInt(this.rank);
+	}
 }
